@@ -1,0 +1,137 @@
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Company {
+  id          String   @id @default(uuid())
+  name        String
+  creditTerms String   @default("Net 30")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  users       User[]
+  orders      Order[]
+}
+
+model User {
+  id           String      @id @default(uuid())
+  email        String      @unique
+  passwordHash String
+  name         String
+  role         String      @default("BUYER") // ADMIN, SALES_REP, BUYER
+  companyId    String?
+  company      Company?    @relation(fields: [companyId], references: [id], onDelete: SetNull)
+  carts        Cart[]
+  orders       Order[]
+  auditLogs    AuditLog[]
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+}
+
+model Product {
+  id          String      @id @default(uuid())
+  sku         String      @unique
+  name        String
+  description String?
+  category    String      @default("General")
+  price       Float
+  stockQty    Int         @default(0)
+  isActive    Boolean     @default(true) // Soft-delete
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  cartItems   CartItem[]
+  orderItems  OrderItem[]
+  stockLogs   StockLog[]
+}
+
+model Cart {
+  id        String     @id @default(uuid())
+  userId    String
+  user      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  status    String     @default("OPEN") // OPEN, CONVERTED
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  items     CartItem[]
+}
+
+model CartItem {
+  id        String   @id @default(uuid())
+  cartId    String
+  cart      Cart     @relation(fields: [cartId], references: [id], onDelete: Cascade)
+  productId String
+  product   Product  @relation(fields: [productId], references: [id])
+  qty       Int      @default(1)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([cartId, productId])
+}
+
+model Order {
+  id           String      @id @default(uuid())
+  companyId    String
+  company      Company     @relation(fields: [companyId], references: [id])
+  userId       String
+  user         User        @relation(fields: [userId], references: [id])
+  status       String      @default("PENDING") // PENDING -> CONFIRMED -> FULFILLED / CANCELLED
+  totalAmount  Float
+  poNumber     String?
+  paymentTerms String      @default("Net 30")
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+  items        OrderItem[]
+  invoice      Invoice?
+  stockLogs    StockLog[]
+}
+
+model OrderItem {
+  id                 String   @id @default(uuid())
+  orderId            String
+  order              Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  productId          String
+  product            Product  @relation(fields: [productId], references: [id])
+  qty                Int
+  unitPriceSnapshot  Float
+  createdAt          DateTime @default(now())
+}
+
+model Invoice {
+  id            String   @id @default(uuid())
+  orderId       String   @unique
+  order         Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  invoiceNumber String   @unique
+  issuedAt      DateTime @default(now())
+  dueDate       DateTime
+  subtotal      Float
+  taxAmount     Float
+  totalAmount   Float
+  status        String   @default("UNPAID") // UNPAID, PAID, VOID
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+model StockLog {
+  id         String   @id @default(uuid())
+  productId  String
+  product    Product  @relation(fields: [productId], references: [id])
+  delta      Int      // e.g. -5 for order, +50 for restock
+  reason     String   // ORDER_DEDUCTION, RESTOCK, DAMAGE_WRITE_OFF, MANUAL_CORRECTION
+  refOrderId String?
+  order      Order?   @relation(fields: [refOrderId], references: [id], onDelete: SetNull)
+  createdAt  DateTime @default(now())
+}
+
+model AuditLog {
+  id        String   @id @default(uuid())
+  actorId   String
+  actor     User     @relation(fields: [actorId], references: [id])
+  action    String   // LOGIN, ORDER_CREATED, ORDER_STATUS_CHANGED, PRODUCT_UPDATED, STOCK_ADJUSTED
+  entity    String   // Order, Product, Auth
+  entityId  String
+  details   String?  // JSON formatted details of the change
+  timestamp DateTime @default(now())
+}

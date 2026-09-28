@@ -1,0 +1,51 @@
+================================================================================
+ARROWSTACK INTERNSHIP - FULL STACK DEVELOPMENT (PROJECT 1 CLEARANCE EVIDENCE)
+================================================================================
+Timestamp: 2026-09-26T17:27:54.000Z
+Platform: Windows x64 | Node.js v24.15.0 | npm 11.12.1
+Target: Project 1 - B2B Order Management Platform
+
+--------------------------------------------------------------------------------
+1. UNIT TEST SUITE (Business Logic, State Machine, Stock & Pricing)
+--------------------------------------------------------------------------------
+Command: npm run test
+
+PASS src/orders/orders.service.spec.ts
+PASS src/products/products.service.spec.ts
+
+Test Suites: 2 passed, 2 total
+Tests:       6 passed, 6 total
+Snapshots:   0 total
+Time:        4.148 s
+
+Unit Tests Verified:
+[PASS] Order State Machine Transitions: reject out-of-sequence transition from PENDING directly to FULFILLED
+[PASS] Order State Machine Transitions: allow valid transition from PENDING to CONFIRMED
+[PASS] Order State Machine Transitions: reject transitions from terminal state CANCELLED
+[PASS] Multi-tenant Cross-Company Access Control: forbid buyer from accessing another company order (403)
+[PASS] ProductsService: correctly calculate IN_STOCK, LOW_STOCK, and OUT_OF_STOCK statuses
+[PASS] ProductsService: reject stock adjustment that results in negative quantity
+
+--------------------------------------------------------------------------------
+2. CLEARANCE PLAN E2E INTEGRATION SUITE (Section 6.2 - All 8 Mandatory Edge Cases)
+--------------------------------------------------------------------------------
+Command: npm run test:e2e
+
+PASS test/clearance-edge-cases.e2e-spec.ts (6.065 s)
+Testing Clearance Plan — Section 6.2 Edge Cases (E2E Suite)
+  √ Edge Case 1: Checkout rejected when quantity > available stock, no order created (52 ms)
+  √ Edge Case 2: Race condition - Two buyers checkout the last unit simultaneously (only 1 succeeds) (231 ms)
+  √ Edge Case 3: Expired JWT on a mutating request returns 401 Unauthorized (9 ms)
+  √ Edge Case 4: Buyer attempts to access another company order returns 403 Forbidden (106 ms)
+  √ Edge Case 5: Order preserves unitPriceSnapshot even when Admin changes price later (122 ms)
+  √ Edge Case 6: Reject out-of-sequence order status transition (PENDING -> FULFILLED skipping CONFIRMED) (30 ms)
+  √ Edge Case 7: Malformed or unexpected DTO fields rejected with 400, returning standardized error shape (13 ms)
+  √ Edge Case 8: Duplicate invoice number blocked by unique database constraint (70 ms)
+
+Test Suites: 1 passed, 1 total
+Tests:       8 passed, 8 total
+Snapshots:   0 total
+Time:        6.329 s
+
+All 8/8 Critical Testing Clearance Requirements verified and passed successfully.
+================================================================================

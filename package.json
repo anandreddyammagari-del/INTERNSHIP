@@ -1,0 +1,16 @@
+{
+  "name": "b2b-platform-workspace",
+  "version": "1.0.0",
+  "description": "Arrowstack Full Stack Development Internship - Project 1 (B2B Order Management Platform)",
+  "scripts": {
+    "dev:backend": "npm --prefix backend run start:dev",
+    "dev:frontend": "npm --prefix frontend run dev",
+    "build:backend": "npm --prefix backend run build",
+    "build:frontend": "npm --prefix frontend run build",
+    "test:unit": "npm --prefix backend run test",
+    "test:e2e": "npm --prefix backend run test:e2e",
+    "db:seed": "npm --prefix backend run prisma:seed",
+    "docker:up": "docker compose up -d",
+    "docker:down": "docker compose down"
+  }
+}
