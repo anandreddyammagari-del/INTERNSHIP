@@ -160,24 +160,3 @@ cd backend && npm run test:e2e
 ```
 *Official test output is logged at [`evidence/test-run.log`](evidence/test-run.log).*
 
----
-
-## 7. Arrowstack Evaluation Rubric Self-Check (100 Points)
-
-| Rubric Criterion | Max Pts | Deliverable & Implementation Evidence |
-|---|:---:|---|
-| **Requirements & Domain Understanding** | **15** | B2B distributor workflow: PO numbers, Net 30/60 credit terms, snapshot pricing, tax invoices, role separation. |
-| **Technical / Professional Execution** | **25** | NestJS modular architecture, Next.js App Router, Prisma ORM, atomic transactions, Dockerfile & compose orchestration. |
-| **Quality, Accuracy & Validation** | **20** | 8/8 clearance edge cases verified with automated E2E tests; class-validator DTO guards; race condition handling. |
-| **Problem-Solving & Independence** | **15** | Traceable engineering decisions recorded in [`DECISION_LOG.md`](DECISION_LOG.md); state machine validation; transaction isolation. |
-| **Documentation & Reproducibility** | **10** | Comprehensive README, seed script, API documentation, reproducible Docker configuration. |
-| **Presentation & Communication** | **10** | 1-Click Evaluation Persona Switcher, printable tax invoice modal, real-time KPI stock dashboards. |
-| **Creativity / Improvement Thinking** | **5** | Full viva interview prep document with model answers in [`VIVA_PREP.md`](VIVA_PREP.md); dual SQLite/Postgres capability. |
-| **Total** | **100** | **Ready for Mentor Review & Final Evaluation.** |
-
----
-
-## 8. Viva & Interview Questions
-
-Detailed model responses to all 7 viva questions from Section 16 of the handbook are documented in [`VIVA_PREP.md`](VIVA_PREP.md).
-"# INTERNSHIP" 
